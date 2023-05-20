@@ -1,6 +1,7 @@
 package com.example.collection;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class EmployeeService {
     private List<Employee> employees = new ArrayList<>(MAX_SIZE);
 
 
-    private Employee add(String firstName, String lastName) {
+    public Employee add(String firstName, String lastName) throws EmployeeAlreadyAddedException, EmployeeStorageIsFullException {
         if (employees.size() >= MAX_SIZE) {
             throw new EmployeeStorageIsFullException();
         }
@@ -23,24 +24,32 @@ public class EmployeeService {
         return employee;
     }
 
-    private void delete(String firstName, String lastName) {
-        Employee employee = new Employee(firstName,lastName);
-        for (Employee empl:employees){
-            if (empl.equals(employee)){
-                employees.remove(empl);
-                                return ;
-            }
+    public Employee delete(String firstName, String lastName) throws EmployeeNotFoundException {
+        Employee employee = new Employee(firstName, lastName);
+        if (employees.contains(employee)) {
+            employees.remove(employee);
+            return employee;
         }
+        throw new EmployeeNotFoundException();
     }
 
-    private Employee find(String firstName, String lastName) {
-        Employee employee = new Employee(firstName,lastName);
-        for (Employee empl:employees){
-            if (empl.equals(employee)){
+
+    public Employee find(String firstName, String lastName) {
+        Employee employee = new Employee(firstName, lastName);
+        for (Employee empl : employees) {
+            if (empl.equals(employee)) {
                 return empl;
             }
         }
         throw new EmployeeNotFoundException();
     }
 
+    public String print() {
+        String a = "";
+        for (Employee empl : employees) {
+            a = a + empl.toString();
+        }
+        return a;
+    }
 }
+    

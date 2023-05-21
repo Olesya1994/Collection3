@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 public class Controller {
@@ -21,17 +24,16 @@ public class Controller {
 
     @GetMapping("/remove")
     public Employee delete(@RequestParam String firstName, @RequestParam String lastName) {
-      return service.delete(firstName, lastName);
+        return service.delete(firstName, lastName);
     }
 
     @GetMapping("/find")
     public Employee find(@RequestParam String firstName, @RequestParam String lastName) {
-       return service.find(firstName, lastName);
+        return service.find(firstName, lastName);
     }
 
-    @GetMapping("/print_all")
-    public String print() {
-       return service.print();
-            }
-
+    @GetMapping()
+    public List<Employee> print() {
+        return service.print();
+    }
 }

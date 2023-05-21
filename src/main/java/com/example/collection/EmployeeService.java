@@ -1,15 +1,19 @@
 package com.example.collection;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class EmployeeService {
     private static final int MAX_SIZE = 10;
-    private final List<Employee> employees = new ArrayList<>(MAX_SIZE);
+    private final List<Employee> employees;
+
+    public EmployeeService() {
+        employees = new ArrayList<>(MAX_SIZE);
+    }
 
 
     public Employee add(String firstName, String lastName) {
@@ -20,7 +24,7 @@ public class EmployeeService {
         if (employees.contains(employee)) {
             throw new EmployeeAlreadyAddedException();
         }
-         employees.add(employee);
+        employees.add(employee);
         return employee;
     }
 
@@ -48,12 +52,9 @@ public class EmployeeService {
         throw new EmployeeNotFoundException();
     }
 
-    public String print() {
-        String a = "";
-        for (Employee empl : employees) {
-            a = a + empl.toString();
-        }
-        return a;
+    public List<Employee> print() {
+        return Collections.unmodifiableList(employees);
     }
+
 }
     

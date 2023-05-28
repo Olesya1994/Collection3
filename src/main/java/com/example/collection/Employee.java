@@ -18,6 +18,9 @@ public class Employee {
     public String getLastName() {
         return lastName;
     }
+    public String getName() {
+        return lastName+ " " + firstName;
+    }
 
     @Override
     public boolean equals(Object o) {

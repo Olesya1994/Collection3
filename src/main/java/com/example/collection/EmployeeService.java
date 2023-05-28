@@ -2,39 +2,32 @@ package com.example.collection;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeService {
-    private static final int MAX_SIZE = 10;
-    private final List<Employee> employees;
+    private final Map<String, Employee> employees;
 
     public EmployeeService() {
-        employees = new ArrayList<>(MAX_SIZE);
+        this.employees = new HashMap<>();
     }
 
 
     public Employee add(String firstName, String lastName) {
-        if (employees.size() >= MAX_SIZE) {
-            throw new EmployeeStorageIsFullException();
-        }
+
         Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        if (employees.containsKey(employee.getName())) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+        employees.put(employee.getName(), employee);
         return employee;
     }
 
     public Employee delete(String firstName, String lastName) throws EmployeeNotFoundException {
         Employee employee = new Employee(firstName, lastName);
-        for (Employee empl : employees) {
-            if (empl.equals(employee)) {
-                employees.remove(employee);
-                return employee;
-            }
+        if (employees.containsKey(employee.getName())) {
+            employees.remove(employee.getName());
+            return employee;
         }
 
         throw new EmployeeNotFoundException();
@@ -44,16 +37,16 @@ public class EmployeeService {
 
     public Employee find(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        for (Employee empl : employees) {
-            if (empl.equals(employee)) {
-                return empl;
-            }
+        if (employees.containsKey(employee.getName())) {
+            return employee;
         }
+
         throw new EmployeeNotFoundException();
     }
 
-    public List<Employee> print() {
-        return Collections.unmodifiableList(employees);
+
+    public Collection<Employee> print() {
+        return Collections.unmodifiableCollection(employees.values());
     }
 
 }

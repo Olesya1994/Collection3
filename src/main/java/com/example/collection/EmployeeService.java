@@ -2,45 +2,52 @@ package com.example.collection;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeService {
-    private static final int MAX_SIZE = 10;
-    private List<Employee> employees = new ArrayList<>(MAX_SIZE);
+    private final Map<String, Employee> employees;
+
+    public EmployeeService() {
+        this.employees = new HashMap<>();
+    }
 
 
-    private Employee add(String firstName, String lastName) {
-        if (employees.size() >= MAX_SIZE) {
-            throw new EmployeeStorageIsFullException();
-        }
+    public Employee add(String firstName, String lastName) {
+
         Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        if (employees.containsKey(employee.getName())) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+        employees.put(employee.getName(), employee);
         return employee;
     }
 
-    private void delete(String firstName, String lastName) {
-        Employee employee = new Employee(firstName,lastName);
-        for (Employee empl:employees){
-            if (empl.equals(employee)){
-                employees.remove(empl);
-                                return ;
-            }
+    public Employee delete(String firstName, String lastName) throws EmployeeNotFoundException {
+        Employee employee = new Employee(firstName, lastName);
+        if (employees.containsKey(employee.getName())) {
+            employees.remove(employee.getName());
+            return employee;
         }
+
+        throw new EmployeeNotFoundException();
+
     }
 
-    private Employee find(String firstName, String lastName) {
-        Employee employee = new Employee(firstName,lastName);
-        for (Employee empl:employees){
-            if (empl.equals(employee)){
-                return empl;
-            }
+
+    public Employee find(String firstName, String lastName) {
+        Employee employee = new Employee(firstName, lastName);
+        if (employees.containsKey(employee.getName())) {
+            return employee;
         }
+
         throw new EmployeeNotFoundException();
     }
 
+
+    public Collection<Employee> print() {
+        return Collections.unmodifiableCollection(employees.values());
+    }
+
 }
+    
